@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark">
+  <title>Sheffield Supertram — SHEQ Portal</title>
+  <meta name="description" content="Landing page for Sheffield Supertram SHEQ: incidents, KPIs, audits, risk, training, environment, and more." />
+
+  <!-- Favicon (placeholder SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230055a4'/%3E%3Cpath d='M10 36h44v6H10z' fill='%23ffd100'/%3E%3Ccircle cx='20' cy='28' r='6' fill='white'/%3E%3Ccircle cx='44' cy='28' r='6' fill='white'/%3E%3C/svg%3E" />
+
+  <link rel="preload" href="assets/styles.css" as="style" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <!-- Decorative background image -->
+  <div class="bg" role="img" aria-label="Sheffield Supertram background image"></div>
+  <div class="bg-overlay" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="brand">
+        <img src="assets/supertram-logo-placeholder.svg" alt="Supertram logo" class="logo" />
+        <div class="brand-meta">
+          <span class="brand-title">Sheffield Supertram</span>
+          <span class="brand-sub">SHEQ Portal</span>
+        </div>
+      </div>
+      <nav class="top-nav" aria-label="Primary">
+        <a class="nav-link" href="#incidents">Incidents</a>
+        <a class="nav-link" href="#kpis">KPIs</a>
+        <a class="nav-link" href="#audits">Audits</a>
+        <a class="nav-link" href="#environment">Environment</a>
+        <a class="nav-link" href="#resources">Resources</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1 id="hero-heading">Safety • Health • Environment • Quality</h1>
+          <p class="lead">One place for incidents, audits, KPIs and continual improvement across the Supertram network.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="incidents/heatmap/index.html">Open Incidents Heat Map</a>
+            <a class="btn btn-ghost" href="#kpis">View KPI Dashboards</a>
+          </div>
+        </div>
+        <ul class="hero-stats" aria-label="Highlights">
+          <li>
+            <span class="stat" data-bind="leadingKpi">—</span>
+            <span class="stat-label">Leading KPIs</span>
+          </li>
+          <li>
+            <span class="stat" data-bind="laggingKpi">—</span>
+            <span class="stat-label">Lagging KPIs</span>
+          </li>
+          <li>
+            <span class="stat" data-bind="envKpi">—</span>
+            <span class="stat-label">Environmental KPIs</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Portals grid -->
+    <section class="portals" aria-labelledby="portals-heading">
+      <div class="container">
+        <h2 id="portals-heading">Jump into a workspace</h2>
+        <div class="grid">
+          <!-- Incidents & Reporting -->
+          <a class="card" href="incidents/heatmap/index.html" id="incidents" aria-label="Incidents Heat Map">
+            <div class="card-icon" aria-hidden="true">📍</div>
+            <div class="card-body">
+              <h3>Incidents Heat Map</h3>
+              <p>Explore spatial patterns with RIDDOR weighting and filters.</p>
+            </div>
+          </a>
+
+          <a class="card" href="forms/report-incident.html" aria-label="Report an Incident">
+            <div class="card-icon" aria-hidden="true">📝</div>
+            <div class="card-body">
+              <h3>Report an Incident</h3>
+              <p>Quick form for near misses, unsafe acts, and accidents.</p>
+            </div>
+          </a>
+
+          <!-- KPIs -->
+          <a class="card" href="powerbi/leading-kpis.html" id="kpis" aria-label="Leading KPIs">
+            <div class="card-icon" aria-hidden="true">📈</div>
+            <div class="card-body">
+              <h3>Leading KPIs</h3>
+              <p>Inspections, training completion, closeout time, and more.</p>
+            </div>
+          </a>
+
+          <a class="card" href="powerbi/lagging-kpis.html" aria-label="Lagging KPIs">
+            <div class="card-icon" aria-hidden="true">📉</div>
+            <div class="card-body">
+              <h3>Lagging KPIs</h3>
+              <p>TRIR, LTIs, first aid cases, and trend analysis.</p>
+            </div>
+          </a>
+
+          <a class="card" href="powerbi/environment-kpis.html" id="environment" aria-label="Environmental KPIs">
+            <div class="card-icon" aria-hidden="true">🌿</div>
+            <div class="card-body">
+              <h3>Environmental KPIs</h3>
+              <p>Energy, water, waste, recycling, and carbon performance.</p>
+            </div>
+          </a>
+
+          <!-- Audit & Assurance -->
+          <a class="card" href="audits/index.html" id="audits" aria-label="Audit Suite">
+            <div class="card-icon" aria-hidden="true">✅</div>
+            <div class="card-body">
+              <h3>Audit Suite</h3>
+              <p>RM3, ISO 9001/14001/45001 with evidence and scoring.</p>
+            </div>
+          </a>
+
+          <a class="card" href="inspections/index.html" aria-label="Inspections & Checklists">
+            <div class="card-icon" aria-hidden="true">🔍</div>
+            <div class="card-body">
+              <h3>Inspections</h3>
+              <p>Site checks, spill containment, housekeeping, and action tracking.</p>
+            </div>
+          </a>
+
+          <a class="card" href="risk-register/index.html" aria-label="Risk Register">
+            <div class="card-icon" aria-hidden="true">📚</div>
+            <div class="card-body">
+              <h3>Risk Register</h3>
+              <p>Operational and SHEQ risks with controls and owners.</p>
+            </div>
+          </a>
+
+          <!-- Training & Permits -->
+          <a class="card" href="training/academy.html" aria-label="Training Academy">
+            <div class="card-icon" aria-hidden="true">🎓</div>
+            <div class="card-body">
+              <h3>Training Academy</h3>
+              <p>Depot & track training, toolbox talks, and CPD certificates.</p>
+            </div>
+          </a>
+
+          <a class="card" href="permits/index.html" aria-label="Permits & Lookout">
+            <div class="card-icon" aria-hidden="true">🎫</div>
+            <div class="card-body">
+              <h3>Permits & Lookout</h3>
+              <p>Permits to work, traffic notices, and service hour planning.</p>
+            </div>
+          </a>
+
+          <!-- Docs & Alerts -->
+          <a class="card" href="docs/index.html" id="resources" aria-label="Document Library">
+            <div class="card-icon" aria-hidden="true">📂</div>
+            <div class="card-body">
+              <h3>Document Library</h3>
+              <p>Policies, procedures, templates, and forms (IMS).</p>
+            </div>
+          </a>
+
+          <a class="card" href="alerts/index.html" aria-label="Safety Alerts">
+            <div class="card-icon" aria-hidden="true">⚠️</div>
+            <div class="card-body">
+              <h3>Safety Alerts</h3>
+              <p>Internal/external alerts and learning from events.</p>
+            </div>
+          </a>
+
+          <!-- Operations & Wellbeing -->
+          <a class="card" href="lone-worker/index.html" aria-label="Lone Worker Monitoring">
+            <div class="card-icon" aria-hidden="true">🛰️</div>
+            <div class="card-body">
+              <h3>Lone Worker</h3>
+              <p>Automated check-ins and escalation via Microsoft 365.</p>
+            </div>
+          </a>
+
+          <a class="card" href="wellbeing/index.html" aria-label="Health & Wellbeing">
+            <div class="card-icon" aria-hidden="true">💙</div>
+            <div class="card-body">
+              <h3>Health & Wellbeing</h3>
+              <p>Occupational health, fatigue risk calculator, and support.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Announcements / News -->
+    <section class="announcements" aria-labelledby="news-heading">
+      <div class="container">
+        <h2 id="news-heading">Announcements</h2>
+        <div class="news-grid">
+          <article class="news-card">
+            <h3>Upcoming Night Works</h3>
+            <p>Some works may need to be carried out outside service hours due to public transport priorities.</p>
+            <a href="works/planned-works.html" class="text-link">View planned works →</a>
+          </article>
+          <article class="news-card">
+            <h3>Contractor Audit Clause</h3>
+            <p>Contractors are subject to annual external audits by a qualified Supertram auditor when required.</p>
+            <a href="procurement/audit-clause.html" class="text-link">Read the clause →</a>
+          </article>
+          <article class="news-card">
+            <h3>Training Requirement</h3>
+            <p>Contractors must complete Supertram Training Academy modules before works commence.</p>
+            <a href="training/requirements.html" class="text-link">Training guidance →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Sheffield Supertram — SHEQ. For internal use only.</p>
+      <div class="footer-actions">
+        <button class="btn btn-ghost sm" id="toggle-theme" aria-pressed="false" aria-label="Toggle theme">🌓 Theme</button>
+        <a class="btn btn-ghost sm" href="mailto:sheq@supertram.co.uk">Contact SHEQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/app.js" defer></script>
+</body>
+</html>
