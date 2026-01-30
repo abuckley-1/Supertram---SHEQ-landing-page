@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="light dark" />
   <title>Sheffield Supertram — SHEQ Portal</title>
   <meta name="description" content="Landing page for Sheffield Supertram SHEQ: incidents, KPIs, audits, risk, training, environment, and more." />
 
-  <!-- Favicon (placeholder SVG data URI) -->
+  <!-- Favicon (inline data URI placeholder) -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230055a4'/%3E%3Cpath d='M10 36h44v6H10z' fill='%23ffd100'/%3E%3Ccircle cx='20' cy='28' r='6' fill='white'/%3E%3Ccircle cx='44' cy='28' r='6' fill='white'/%3E%3C/svg%3E" />
 
-  <link rel="preload" href="assets/styles.css" as="style" />
-  <link rel="stylesheet" href="assets/styles.css" />
+  <!-- Main stylesheet (root path) -->
+  <link rel="preload" href="styles.css?v=1.0" as="style" />
+  <link rel="stylesheet" href="styles.css?v=1.0" />
 </head>
 <body>
-  <!-- Decorative background image -->
+  <!-- Full-bleed background image + overlay (visual only) -->
   <div class="bg" role="img" aria-label="Sheffield Supertram background image"></div>
   <div class="bg-overlay" aria-hidden="true"></div>
 
-  <header class="site-header">
+  <!-- Header -->
+  <header class="site-header" role="banner">
     <div class="container">
-      <div class="brand">
-        <img src="assets/supertram-logo-placeholder.svg" alt="Supertram logo" class="logo" />
+      <a class="brand" href="#" aria-label="SHEQ Portal Home">
+        <img src="supertram-logo-placeholder.svg" alt="Supertram logo" class="logo" />
         <div class="brand-meta">
           <span class="brand-title">Sheffield Supertram</span>
           <span class="brand-sub">SHEQ Portal</span>
         </div>
-      </div>
+      </a>
       <nav class="top-nav" aria-label="Primary">
         <a class="nav-link" href="#incidents">Incidents</a>
         <a class="nav-link" href="#kpis">KPIs</a>
@@ -37,19 +39,24 @@
     </div>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <!-- Hero -->
     <section class="hero" aria-labelledby="hero-heading">
       <div class="container hero-inner">
         <div class="hero-copy">
           <h1 id="hero-heading">Safety • Health • Environment • Quality</h1>
-          <p class="lead">One place for incidents, audits, KPIs and continual improvement across the Supertram network.</p>
+          <p class="lead">
+            One place for incidents, audits, KPIs and continual improvement across the Supertram network.
+          </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="incidents/heatmap/index.html">Open Incidents Heat Map</a>
+            <!-- Update these HREFs to your real pages -->
+            <a class="btn" href="incidents/heatmap/index.html">Open Incidents Heat Map</a>
             <a class="btn btn-ghost" href="#kpis">View KPI Dashboards</a>
           </div>
         </div>
-        <ul class="hero-stats" aria-label="Highlights">
+
+        <!-- KPI highlights -->
+        <ul class="hero-stats" aria-label="KPI highlights">
           <li>
             <span class="stat" data-bind="leadingKpi">—</span>
             <span class="stat-label">Leading KPIs</span>
@@ -72,7 +79,7 @@
         <h2 id="portals-heading">Jump into a workspace</h2>
         <div class="grid">
           <!-- Incidents & Reporting -->
-          <a class="card" href="incidents/heatmap/index.html" id="incidents" aria-label="Incidents Heat Map">
+          <a class="card" id="incidents" href="incidents/heatmap/index.html" aria-label="Incidents Heat Map">
             <div class="card-icon" aria-hidden="true">📍</div>
             <div class="card-body">
               <h3>Incidents Heat Map</h3>
@@ -89,7 +96,7 @@
           </a>
 
           <!-- KPIs -->
-          <a class="card" href="powerbi/leading-kpis.html" id="kpis" aria-label="Leading KPIs">
+          <a class="card" id="kpis" href="powerbi/leading-kpis.html" aria-label="Leading KPIs">
             <div class="card-icon" aria-hidden="true">📈</div>
             <div class="card-body">
               <h3>Leading KPIs</h3>
@@ -105,7 +112,7 @@
             </div>
           </a>
 
-          <a class="card" href="powerbi/environment-kpis.html" id="environment" aria-label="Environmental KPIs">
+          <a class="card" id="environment" href="powerbi/environment-kpis.html" aria-label="Environmental KPIs">
             <div class="card-icon" aria-hidden="true">🌿</div>
             <div class="card-body">
               <h3>Environmental KPIs</h3>
@@ -114,7 +121,7 @@
           </a>
 
           <!-- Audit & Assurance -->
-          <a class="card" href="audits/index.html" id="audits" aria-label="Audit Suite">
+          <a class="card" id="audits" href="audits/index.html" aria-label="Audit Suite">
             <div class="card-icon" aria-hidden="true">✅</div>
             <div class="card-body">
               <h3>Audit Suite</h3>
@@ -126,7 +133,7 @@
             <div class="card-icon" aria-hidden="true">🔍</div>
             <div class="card-body">
               <h3>Inspections</h3>
-              <p>Site checks, spill containment, housekeeping, and action tracking.</p>
+              <p>Site checks, spill containment, housekeeping, and actions.</p>
             </div>
           </a>
 
@@ -156,7 +163,7 @@
           </a>
 
           <!-- Docs & Alerts -->
-          <a class="card" href="docs/index.html" id="resources" aria-label="Document Library">
+          <a class="card" id="resources" href="docs/index.html" aria-label="Document Library">
             <div class="card-icon" aria-hidden="true">📂</div>
             <div class="card-body">
               <h3>Document Library</h3>
@@ -192,7 +199,7 @@
       </div>
     </section>
 
-    <!-- Announcements / News -->
+    <!-- Announcements -->
     <section class="announcements" aria-labelledby="news-heading">
       <div class="container">
         <h2 id="news-heading">Announcements</h2>
@@ -200,24 +207,27 @@
           <article class="news-card">
             <h3>Upcoming Night Works</h3>
             <p>Some works may need to be carried out outside service hours due to public transport priorities.</p>
-            <a href="works/planned-works.html" class="text-link">View planned works →</a>
+            <a class="text-link" href="works/planned-works.html">View planned works →</a>
           </article>
+
           <article class="news-card">
             <h3>Contractor Audit Clause</h3>
             <p>Contractors are subject to annual external audits by a qualified Supertram auditor when required.</p>
-            <a href="procurement/audit-clause.html" class="text-link">Read the clause →</a>
+            <a class="text-link" href="procurement/audit-clause.html">Read the clause →</a>
           </article>
+
           <article class="news-card">
             <h3>Training Requirement</h3>
             <p>Contractors must complete Supertram Training Academy modules before works commence.</p>
-            <a href="training/requirements.html" class="text-link">Training guidance →</a>
+            <a class="text-link" href="training/requirements.html">Training guidance →</a>
           </article>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
     <div class="container footer-inner">
       <p>© <span id="year"></span> Sheffield Supertram — SHEQ. For internal use only.</p>
       <div class="footer-actions">
@@ -227,6 +237,8 @@
     </div>
   </footer>
 
-  <script src="assets/app.js" defer></script>
+  <!-- Main script (root path) -->
+  <script src="app.js?v=1.0" defer></script>
 </body>
 </html>
+``
