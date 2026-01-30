@@ -1,0 +1,118 @@
+/*
+  Sheffield Supertram — SHEQ Portal styles
+  Design language: compact header, 1200px container, card-style controls.
+*/
+
+:root {
+  --brand: #0055a4;     /* Supertram blue (approx.) */
+  --brand-2: #ffd100;   /* Accent yellow */
+  --bg: #0b0e14;
+  --text: #0c1222;
+  --muted: #5a6577;
+  --surface: #ffffff;
+  --surface-2: #f4f6f9;
+  --ring: rgba(0,85,164,0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0e14;
+    --text: #e5e9f2;
+    --muted: #9aa5b1;
+    --surface: #121722;
+    --surface-2: #1b2230;
+    --ring: rgba(255,209,0,0.2);
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
+  color: var(--text); background: var(--bg);
+}
+
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding-inline: 16px; }
+
+/* Background image and overlay */
+.bg {
+  position: fixed; inset: 0; z-index: -2;
+  background-image: var(--hero-image, url('https://upload.wikimedia.org/wikipedia/commons/6/64/Sheffield_Supertram_at_City_Hall_stop.jpg'));
+  background-size: cover; background-position: center; filter: blur(0px) brightness(0.85);
+  transform: scale(1.02);
+}
+.bg-overlay {
+  position: fixed; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+}
+
+/* Header */
+.site-header {
+  position: sticky; top: 0; backdrop-filter: blur(8px);
+  background: color-mix(in oklab, var(--surface) 75%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+}
+.site-header .container { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.logo { height: 22px; width: auto; display: block; }
+.brand-title { font-weight: 700; letter-spacing: 0.2px; }
+.brand-sub { font-size: 12px; color: var(--muted); margin-left: 4px; }
+
+.top-nav { display: flex; gap: 12px; }
+.nav-link { color: var(--text); text-decoration: none; padding: 8px 10px; border-radius: 8px; }
+.nav-link:hover { background: color-mix(in oklab, var(--surface-2) 85%, transparent); }
+
+/* Hero */
+.hero { padding: clamp(24px, 6vw, 56px) 0; }
+.hero-inner { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; align-items: end; }
+.hero-copy h1 { margin: 0 0 8px; color: white; }
+.lead { color: #eaf2ff; max-width: 60ch; }
+.hero-actions { display: flex; gap: 12px; margin-top: 12px; }
+
+.hero-stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.hero-stats li { background: color-mix(in oklab, var(--surface) 85%, transparent); border: 1px solid color-mix(in oklab, var(--text) 10%, transparent); border-radius: 12px; padding: 12px; text-align: center; }
+.stat { display: block; font-weight: 800; font-size: 28px; color: white; }
+.stat-label { display: block; font-size: 12px; color: #d7def0; }
+
+/* Buttons */
+.btn { --btn-bg: var(--brand); --btn-color: white; --btn-border: transparent;
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--btn-color);
+  background: var(--btn-bg); border: 1px solid var(--btn-border); border-radius: 12px; padding: 10px 14px; font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15), 0 8px 24px rgba(0,85,164,0.25);
+}
+.btn:hover { filter: brightness(1.05); }
+.btn-ghost { --btn-bg: color-mix(in oklab, var(--surface) 85%, transparent); --btn-color: white; --btn-border: color-mix(in oklab, var(--text) 12%, transparent); box-shadow: none; }
+.btn.sm { padding: 6px 10px; border-radius: 10px; }
+
+/* Portals */
+.portals { padding: 24px 0 8px; }
+.portals h2 { color: white; }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.card { display: grid; grid-template-columns: 48px 1fr; gap: 12px; align-items: center; text-decoration: none; color: inherit;
+  background: color-mix(in oklab, var(--surface) 85%, transparent);
+  border: 1px solid color-mix(in oklab, var(--text) 10%, transparent); border-radius: 14px; padding: 12px; transition: transform .15s ease, box-shadow .15s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.2); }
+.card-icon { font-size: 28px; line-height: 48px; width: 48px; height: 48px; display: grid; place-items: center; background: color-mix(in oklab, var(--brand) 20%, transparent); border-radius: 12px; }
+.card-body h3 { margin: 0; color: white; font-size: 16px; }
+.card-body p { margin: 4px 0 0; color: #cdd6e8; font-size: 13px; }
+
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 800px) { .hero-inner { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } .hero-stats { grid-template-columns: 1fr; } }
+
+/* Announcements */
+.announcements { padding: 24px 0 56px; }
+.news-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.news-card { background: color-mix(in oklab, var(--surface) 85%, transparent); border: 1px solid color-mix(in oklab, var(--text) 10%, transparent); border-radius: 14px; padding: 14px; }
+.news-card h3 { margin: 0 0 6px; color: white; }
+.news-card p { margin: 0 0 8px; color: #cfd7ea; }
+.text-link { color: #b8d5ff; text-decoration: none; }
+.text-link:hover { text-decoration: underline; }
+
+@media (max-width: 900px) { .news-grid { grid-template-columns: 1fr; } }
+
+/* Footer */
+.site-footer { border-top: 1px solid color-mix(in oklab, var(--text) 10%, transparent); background: color-mix(in oklab, var(--surface) 75%, transparent); backdrop-filter: blur(6px); }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+.footer-inner p { margin: 0; color: #d0d7ea; }
+.footer-actions { display: flex; gap: 8px; }
