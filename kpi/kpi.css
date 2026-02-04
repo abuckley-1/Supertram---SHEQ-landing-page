@@ -1,0 +1,93 @@
+:root{
+  --st-blue:#003d73;
+  --st-blue-2:#005fa3;
+  --st-accent:#ffcc00;
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --shadow:0 2px 10px rgba(0,0,0,.08);
+  --shadow-hover:0 8px 24px rgba(0,0,0,.16);
+  --radius:12px;
+  --container:1200px;
+}
+
+*{box-sizing:border-box}
+html,body{
+  margin:0; padding:0; background:var(--bg); color:#111;
+  font-family:"Segoe UI", Roboto, Inter, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  line-height:1.45;
+}
+
+.topnav{
+  position:sticky; top:0; z-index:20;
+  background:#fff; border-bottom:1px solid var(--border);
+  padding:10px 16px; display:grid; place-items:center;
+}
+.topnav .title{font-weight:600; color:var(--st-blue); font-size:22px}
+
+.st-hero{
+  position:relative; width:100%; height:160px;
+  background:url("../RBSupertram (1).jpg") center/cover no-repeat;
+  display:flex; align-items:center; justify-content:center; padding:16px;
+  border-bottom:1px solid var(--border); overflow:hidden;
+}
+.st-hero::before{content:""; position:absolute; inset:0; background:rgba(0,0,0,.28)}
+.logo-wrap{position:relative; z-index:2}
+.st-logo{height:56px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+
+.container{max-width:var(--container); margin:18px auto; padding:0 16px}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px;
+}
+
+.filters .filters-row{
+  display:grid; gap:12px;
+  grid-template-columns: repeat(12, 1fr);
+}
+.filters .field{grid-column: span 3}
+.filters .field.right{display:flex; align-items:end; gap:10px; justify-content:flex-end}
+
+label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px}
+input[type="date"], select{
+  width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:#fff;
+}
+.dates{display:flex; align-items:center; gap:8px}
+
+.btn{
+  background:var(--st-blue); color:#fff; padding:10px 12px; border-radius:10px;
+  font-weight:600; font-size:14px; border:1px solid transparent; cursor:pointer;
+}
+.btn:hover{background:var(--st-blue-2)}
+.btn.secondary{background:#fff; color:var(--st-blue); border-color:var(--st-blue)}
+.btn.secondary:hover{background:#f0f5fb}
+
+.kpis-grid{
+  display:grid; gap:14px; margin:16px 0;
+  grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+}
+.kpi-title{color:var(--muted); font-size:13px}
+.kpi-num{font-size:30px; font-weight:700; color:var(--st-blue)}
+.kpi-sub{font-size:12px; color:var(--muted); margin-top:2px}
+
+.charts-grid, .tables-grid{
+  display:grid; gap:16px; margin:16px 0;
+  grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+}
+h2,h3{margin:0 0 10px 0}
+
+.table{width:100%; border-collapse: collapse; font-size:14px}
+.table th, .table td{padding:8px 10px; border-bottom:1px solid var(--border)}
+.table th{color:#333; text-align:left}
+.table tr:hover{background:#fafafa}
+
+footer{margin:30px 0 20px; text-align:center; color:#666; font-size:14px}
+
+@media (max-width: 600px){
+  .filters .field{grid-column: span 12}
+  .st-hero{height:120px}
+  .st-logo{height:44px}
+}
+``
