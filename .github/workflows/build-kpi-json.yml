@@ -1,0 +1,39 @@
+name: Build KPI JSON Automatically
+
+on:
+  push:
+    paths:
+      - 'NEW FORM Accident and Incident Investigations Action Tracker_ST0335-25x26sx (1).xlsx'
+      - 'data/convert_to_kpi_json.py'
+      - '.github/workflows/build-kpi-json.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout files
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install openpyxl pandas
+
+    - name: Generate KPI JSON
+      working-directory: ./data
+      run: |
+        python3 convert_to_kpi_json.py
+
+    - name: Commit updated JSON
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add data/kpi_data.json
+        git commit -m "Automated update of KPI data"
+        git push
