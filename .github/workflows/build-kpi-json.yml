@@ -30,10 +30,12 @@ jobs:
       run: |
         python3 convert_to_kpi_json.py
 
-    - name: Commit updated JSON
-      run: |
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add data/kpi_data.json
-        git commit -m "Automated update of KPI data"
-        git push
+   - name: Commit updated JSON
+        run: |
+          set -euxo pipefail
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git pull --rebase
+          git add data/kpi_data.json
+          git commit -m "Automated update of KPI data" || echo "No changes to commit"
+          git push
