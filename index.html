@@ -20,104 +20,209 @@
       --shadow:0 2px 10px rgba(0,0,0,.08);
       --shadow-hover:0 8px 24px rgba(0,0,0,.16);
       --radius:12px;
-      --container:1200px; /* as per your preference on previous projects */
+      --container:1200px;
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:#111;font-family: "Segoe UI", Roboto, Inter, system-ui, -apple-system, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol", sans-serif; line-height:1.45}
+    html,body{
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:#111;
+      font-family:"Segoe UI", Roboto, Inter, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+      line-height:1.45;
+    }
+
     a{color:var(--st-blue-2);text-decoration:none}
     a:hover{text-decoration:underline}
 
-    /* Sticky minimal nav (optional; can remove if you want just the hero) */
+    /* CENTRED TOP NAV */
     .topnav{
-      position: sticky; top:0; z-index: 20;
-      background: #fff; border-bottom:1px solid var(--border);
-      display:flex; align-items:center; gap:12px; padding:10px 16px;
+      position: sticky;
+      top:0;
+      z-index:20;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+      padding:10px 16px;
+      
+      /* This line forces perfect centering */
+      display:grid;
+      place-items:center;
     }
-    .topnav .title{font-weight:600; color:var(--st-blue); font-size:20px}
-    .topnav .spacer{flex:1}
-    .topnav a.btn-mini{
-      background:var(--st-blue); color:#fff; padding:6px 10px; border-radius:8px; text-decoration:none; font-size:13px;
+    .topnav .title{
+      font-weight:600;
+      color:var(--st-blue);
+      font-size:20px;
     }
 
-    /* Hero header with background image and just the logo */
+    /* Hero header with background image and logo */
     .st-hero{
-      position:relative; width:100%; height:220px;
-      background: url("RBSupertram (1).jpg") center/cover no-repeat;
-      display:flex; align-items:center; justify-content:center;
+      position:relative;
+      width:100%;
+      height:220px;
+      background:url("RBSupertram (1).jpg") center/cover no-repeat;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       padding:20px;
       border-bottom:1px solid var(--border);
       overflow:hidden;
     }
-    /* Optional dark overlay for contrast */
     .st-hero::before{
-      content:""; position:absolute; inset:0; background: rgba(0,0,0,.28);
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.28);
     }
-    .st-hero .logo-wrap{ position:relative; z-index:2; display:flex; align-items:center; justify-content:center}
-    .st-hero .st-logo{ height:70px; max-width:90vw; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.45)); }
+    .st-hero .logo-wrap{
+      position:relative;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .st-hero .st-logo{
+      height:70px;
+      max-width:90vw;
+      object-fit:contain;
+      filter:drop-shadow(0 2px 6px rgba(0,0,0,.45));
+    }
 
-    /* Main container */
-    .container{max-width: var(--container); margin: 22px auto; padding: 0 16px;}
+    /* Main layout */
+    .container{
+      max-width:var(--container);
+      margin:22px auto;
+      padding:0 16px;
+    }
 
     /* Section heading */
     .section-head{
-      display:flex; align-items:baseline; gap:10px; margin: 6px 0 14px 0;
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      margin:6px 0 14px 0;
     }
-    .section-head h2{margin:0; font-size:22px; color:#111}
-    .section-head .sub{color:var(--muted); font-size:14px}
+    .section-head h2{
+      margin:0;
+      font-size:22px;
+      color:#111;
+    }
+    .section-head .sub{
+      color:var(--muted);
+      font-size:14px;
+    }
 
     /* Grid cards */
     .grid{
-      display:grid; gap:18px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      display:grid;
+      gap:18px;
+      grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
     }
     .card{
-      background: var(--card); border:1px solid var(--border); border-radius: var(--radius);
-      padding:18px; box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease;
-      display:flex; flex-direction:column; min-height:140px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+      transition:transform .16s ease, box-shadow .16s ease;
+      display:flex;
+      flex-direction:column;
+      min-height:140px;
     }
-    .card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-hover); }
-    .card h3{ margin:.2rem 0 .35rem 0; font-size:18px; color:#111}
-    .card p{ margin:0 0 10px 0; color:var(--muted); font-size:14px}
-    .actions{ margin-top:auto; display:flex; gap:10px; flex-wrap:wrap}
+    .card:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-hover);
+    }
+    .card h3{
+      margin:.2rem 0 .35rem 0;
+      font-size:18px;
+      color:#111;
+    }
+    .card p{
+      margin:0 0 10px 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .actions{
+      margin-top:auto;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
     .btn{
-      background: var(--st-blue); color:#fff; padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px; text-decoration:none; border:1px solid transparent;
+      background:var(--st-blue);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:10px;
+      font-weight:600;
+      font-size:14px;
+      text-decoration:none;
+      border:1px solid transparent;
     }
-    .btn:hover{ text-decoration:none; background: var(--st-blue-2); }
+    .btn:hover{
+      background:var(--st-blue-2);
+    }
     .btn.secondary{
-      background:#fff; color: var(--st-blue); border-color: var(--st-blue); 
+      background:#fff;
+      color:var(--st-blue);
+      border-color:var(--st-blue);
     }
-    .btn.secondary:hover{ background:#f2f6fb; }
+    .btn.secondary:hover{
+      background:#f2f6fb;
+    }
 
-    /* KPI quick tiles (optional; keep or remove) */
-    .kpis{ display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 6px 0 18px 0;}
-    .kpi{
-      background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; box-shadow: var(--shadow);
+    /* KPI tiles (optional, hidden) */
+    .kpis{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
+      margin:6px 0 18px 0;
     }
-    .kpi .num{ font-size:28px; font-weight:700; color:var(--st-blue); line-height:1.1}
-    .kpi .lbl{ font-size:12px; color:var(--muted) }
+    .kpi{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+    .kpi .num{
+      font-size:28px;
+      font-weight:700;
+      color:var(--st-blue);
+      line-height:1.1;
+    }
+    .kpi .lbl{
+      font-size:12px;
+      color:var(--muted);
+    }
 
     /* Footer */
-    footer{ margin: 30px 0 20px 0; padding: 12px 16px; text-align:center; color:#666; font-size: 14px;}
-
-    /* Small screens refinements */
-    @media (max-width: 480px){
-      .st-hero{ height: 180px; }
-      .st-hero .st-logo{ height: 48px; }
+    footer{
+      margin:30px 0 20px 0;
+      padding:12px 16px;
+      text-align:center;
+      color:#666;
+      font-size:14px;
     }
+
+    /* Small screen tweaks */
+    @media (max-width:480px){
+      .st-hero{height:180px;}
+      .st-hero .st-logo{height:48px;}
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- Minimal sticky top bar (optional) -->
+  <!-- CENTRED TOP BAR -->
   <div class="topnav" role="navigation" aria-label="Top bar">
     <span class="title">SHEQ Landing Page</span>
-    <!-- Quick links can be added back here if needed -->
-    <!-- <a class="btn-mini" href="#">Contact</a> -->
   </div>
 
-  <!-- HERO HEADER (background tram + logo only) -->
+  <!-- HERO HEADER -->
   <header class="st-hero" role="banner" aria-label="Supertram SHEQ header">
     <div class="logo-wrap">
       <img class="st-logo" src="STLogo.jpg" alt="Supertram – South Yorkshire’s Transport" />
@@ -127,9 +232,8 @@
   <!-- MAIN CONTENT -->
   <main class="container" id="content">
 
-    <!-- OPTIONAL KPI tiles (keep or remove as you wish) -->
-    <!-- If you want this gone, delete this block -->
-    <section aria-label="Key indicators" class="kpis" style="display: none;">
+    <!-- KPIs hidden by default -->
+    <section aria-label="Key indicators" class="kpis" style="display:none;">
       <div class="kpi"><div class="num">3</div><div class="lbl">Open RIDDOR</div></div>
       <div class="kpi"><div class="num">12</div><div class="lbl">Open Actions</div></div>
       <div class="kpi"><div class="num">97%</div><div class="lbl">On-time Close</div></div>
@@ -145,7 +249,6 @@
 
       <div class="grid">
 
-        <!-- Incident Reporting -->
         <article class="card">
           <h3>Incident Reporting</h3>
           <p>Submit, track and review incidents across the network, including near misses and hazards.</p>
@@ -155,7 +258,6 @@
           </div>
         </article>
 
-        <!-- Risk Assessments -->
         <article class="card">
           <h3>Risk Assessments</h3>
           <p>Create and manage task and activity risk assessments with version control.</p>
@@ -165,9 +267,8 @@
           </div>
         </article>
 
-        <!-- Audit & RM3 -->
         <article class="card">
-          <h3>Audits &amp; RM3</h3>
+          <h3>Audits & RM3</h3>
           <p>Conduct audits aligned to RM3 and ISO 9001/14001/45001 with automated scoring.</p>
           <div class="actions">
             <a class="btn" href="#audit">Open Auditor</a>
@@ -175,9 +276,8 @@
           </div>
         </article>
 
-        <!-- Policies & Procedures -->
         <article class="card">
-          <h3>Policies &amp; Procedures</h3>
+          <h3>Policies & Procedures</h3>
           <p>Access the latest SHEQ policies, procedures and forms in one place.</p>
           <div class="actions">
             <a class="btn" href="#policies">View Library</a>
@@ -185,9 +285,8 @@
           </div>
         </article>
 
-        <!-- Training & Competence -->
         <article class="card">
-          <h3>Training &amp; Competence</h3>
+          <h3>Training & Competence</h3>
           <p>Training Academy modules, depot/track safety and contractor onboarding.</p>
           <div class="actions">
             <a class="btn" href="#training">Training Hub</a>
@@ -195,21 +294,17 @@
           </div>
         </article>
 
-        <!-- Environmental -->
         <article class="card">
           <h3>Environmental</h3>
           <p>Waste, water, energy and carbon reporting, including exemptions and factors.</p>
           <div class="actions">
             <a class="btn" href="#environment">Open Dashboard</a>
-            <a class="btn secondary" href="#factors">Factors &amp; Guidance</a>
+            <a class="btn secondary" href="#factors">Factors & Guidance</a>
           </div>
         </article>
 
       </div>
     </section>
-
-    <!-- Announcements section REMOVED per your instruction -->
-    <!-- (If needed later, we can re-introduce as a slim “Alerts” strip.) -->
 
   </main>
 
@@ -217,10 +312,5 @@
     © Sheffield Supertram — Safety • Health • Environment • Quality
   </footer>
 
-  <!-- Optional: tiny script to support hash routing (placeholder) -->
-  <script>
-    // Hook up internal anchors later if you wire to real apps/paths
-  </script>
 </body>
 </html>
-``
