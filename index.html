@@ -1,244 +1,227 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-  <title>Sheffield Supertram — SHEQ Portal</title>
-  <meta name="description" content="Landing page for Sheffield Supertram SHEQ: incidents, KPIs, audits, risk, training, environment, and more." />
+  <title>Supertram · SHEQ Hub</title>
+  <meta name="description" content="Supertram SHEQ landing page – Safety, Health, Environment and Quality resources and tools." />
+  <link rel="icon" href="STLogo.jpg" />
 
-  <!-- Favicon (inline data URI placeholder) -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230055a4'/%3E%3Cpath d='M10 36h44v6H10z' fill='%23ffd100'/%3E%3Ccircle cx='20' cy='28' r='6' fill='white'/%3E%3Ccircle cx='44' cy='28' r='6' fill='white'/%3E%3C/svg%3E" />
+  <!-- Inline CSS for simplicity; move to style.css if preferred -->
+  <style>
+    :root{
+      --st-blue:#003d73;
+      --st-blue-2:#005fa3;
+      --st-accent:#ffcc00;
+      --bg:#f6f7f9;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --shadow:0 2px 10px rgba(0,0,0,.08);
+      --shadow-hover:0 8px 24px rgba(0,0,0,.16);
+      --radius:12px;
+      --container:1200px; /* as per your preference on previous projects */
+    }
 
-  <!-- Main stylesheet (root path) -->
-  <link rel="preload" href="styles.css?v=1.0" as="style" />
-  <link rel="stylesheet" href="styles.css?v=1.0" />
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:#111;font-family: "Segoe UI", Roboto, Inter, system-ui, -apple-system, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol", sans-serif; line-height:1.45}
+    a{color:var(--st-blue-2);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* Sticky minimal nav (optional; can remove if you want just the hero) */
+    .topnav{
+      position: sticky; top:0; z-index: 20;
+      background: #fff; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:12px; padding:10px 16px;
+    }
+    .topnav .title{font-weight:600; color:var(--st-blue); font-size:15px}
+    .topnav .spacer{flex:1}
+    .topnav a.btn-mini{
+      background:var(--st-blue); color:#fff; padding:6px 10px; border-radius:8px; text-decoration:none; font-size:13px;
+    }
+
+    /* Hero header with background image and just the logo */
+    .st-hero{
+      position:relative; width:100%; height:220px;
+      background: url("RBSupertram (1).jpg") center/cover no-repeat;
+      display:flex; align-items:center; justify-content:center;
+      padding:20px;
+      border-bottom:1px solid var(--border);
+      overflow:hidden;
+    }
+    /* Optional dark overlay for contrast */
+    .st-hero::before{
+      content:""; position:absolute; inset:0; background: rgba(0,0,0,.28);
+    }
+    .st-hero .logo-wrap{ position:relative; z-index:2; display:flex; align-items:center; justify-content:center}
+    .st-hero .st-logo{ height:70px; max-width:90vw; object-fit:contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.45)); }
+
+    /* Main container */
+    .container{max-width: var(--container); margin: 22px auto; padding: 0 16px;}
+
+    /* Section heading */
+    .section-head{
+      display:flex; align-items:baseline; gap:10px; margin: 6px 0 14px 0;
+    }
+    .section-head h2{margin:0; font-size:22px; color:#111}
+    .section-head .sub{color:var(--muted); font-size:14px}
+
+    /* Grid cards */
+    .grid{
+      display:grid; gap:18px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .card{
+      background: var(--card); border:1px solid var(--border); border-radius: var(--radius);
+      padding:18px; box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease;
+      display:flex; flex-direction:column; min-height:140px;
+    }
+    .card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .card h3{ margin:.2rem 0 .35rem 0; font-size:18px; color:#111}
+    .card p{ margin:0 0 10px 0; color:var(--muted); font-size:14px}
+    .actions{ margin-top:auto; display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      background: var(--st-blue); color:#fff; padding:10px 12px; border-radius:10px; font-weight:600; font-size:14px; text-decoration:none; border:1px solid transparent;
+    }
+    .btn:hover{ text-decoration:none; background: var(--st-blue-2); }
+    .btn.secondary{
+      background:#fff; color: var(--st-blue); border-color: var(--st-blue); 
+    }
+    .btn.secondary:hover{ background:#f2f6fb; }
+
+    /* KPI quick tiles (optional; keep or remove) */
+    .kpis{ display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 6px 0 18px 0;}
+    .kpi{
+      background:#fff; border:1px solid var(--border); border-radius:14px; padding:14px; text-align:center; box-shadow: var(--shadow);
+    }
+    .kpi .num{ font-size:28px; font-weight:700; color:var(--st-blue); line-height:1.1}
+    .kpi .lbl{ font-size:12px; color:var(--muted) }
+
+    /* Footer */
+    footer{ margin: 30px 0 20px 0; padding: 12px 16px; text-align:center; color:#666; font-size: 14px;}
+
+    /* Small screens refinements */
+    @media (max-width: 480px){
+      .st-hero{ height: 180px; }
+      .st-hero .st-logo{ height: 48px; }
+    }
+  </style>
 </head>
-<body>
-  <!-- Full-bleed background image + overlay (visual only) -->
-  <div class="bg" role="img" aria-label="Sheffield Supertram background image"></div>
-  <div class="bg-overlay" aria-hidden="true"></div>
 
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="container">
-      <a class="brand" href="#" aria-label="SHEQ Portal Home">
-        <img src="supertram-logo-placeholder.svg" alt="Supertram logo" class="logo" />
-        <div class="brand-meta">
-          <span class="brand-title">Sheffield Supertram</span>
-          <span class="brand-sub">SHEQ Portal</span>
-        </div>
-      </a>
-      <nav class="top-nav" aria-label="Primary">
-        <a class="nav-link" href="#incidents">Incidents</a>
-        <a class="nav-link" href="#kpis">KPIs</a>
-        <a class="nav-link" href="#audits">Audits</a>
-        <a class="nav-link" href="#environment">Environment</a>
-        <a class="nav-link" href="#resources">Resources</a>
-      </nav>
+<body>
+
+  <!-- Minimal sticky top bar (optional) -->
+  <div class="topnav" role="navigation" aria-label="Top bar">
+    <span class="title">SHEQ Hub</span>
+    <span class="spacer"></span>
+    <!-- Quick links can be added back here if needed -->
+    <!-- <a class="btn-mini" href="#">Contact</a> -->
+  </div>
+
+  <!-- HERO HEADER (background tram + logo only) -->
+  <header class="st-hero" role="banner" aria-label="Supertram SHEQ header">
+    <div class="logo-wrap">
+      <img class="st-logo" src="STLogo.jpg" alt="Supertram – South Yorkshire’s Transport" />
     </div>
   </header>
 
-  <main id="main" tabindex="-1">
-    <!-- Hero -->
-    <section class="hero" aria-labelledby="hero-heading">
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <h1 id="hero-heading">Safety • Health • Environment • Quality</h1>
-          <p class="lead">
-            One place for incidents, audits, KPIs and continual improvement across the Supertram network.
-          </p>
-          <div class="hero-actions">
-            <!-- Update these HREFs to your real pages -->
-            <a class="btn" href="incidents/heatmap/index.html">Open Incidents Heat Map</a>
-            <a class="btn btn-ghost" href="#kpis">View KPI Dashboards</a>
+  <!-- MAIN CONTENT -->
+  <main class="container" id="content">
+
+    <!-- OPTIONAL KPI tiles (keep or remove as you wish) -->
+    <!-- If you want this gone, delete this block -->
+    <section aria-label="Key indicators" class="kpis" style="display: none;">
+      <div class="kpi"><div class="num">3</div><div class="lbl">Open RIDDOR</div></div>
+      <div class="kpi"><div class="num">12</div><div class="lbl">Open Actions</div></div>
+      <div class="kpi"><div class="num">97%</div><div class="lbl">On-time Close</div></div>
+      <div class="kpi"><div class="num">0</div><div class="lbl">Lost Time</div></div>
+    </section>
+
+    <!-- CORE SECTIONS -->
+    <section>
+      <div class="section-head">
+        <h2>SHEQ Tools & Resources</h2>
+        <span class="sub">Everything for Safety, Health, Environment and Quality</span>
+      </div>
+
+      <div class="grid">
+
+        <!-- Incident Reporting -->
+        <article class="card">
+          <h3>Incident Reporting</h3>
+          <p>Submit, track and review incidents across the network, including near misses and hazards.</p>
+          <div class="actions">
+            <a class="btn" href="#incident-report">Open Portal</a>
+            <a class="btn secondary" href="#incident-guidance">Guidance</a>
           </div>
-        </div>
+        </article>
 
-        <!-- KPI highlights -->
-        <ul class="hero-stats" aria-label="KPI highlights">
-          <li>
-            <span class="stat" data-bind="leadingKpi">—</span>
-            <span class="stat-label">Leading KPIs</span>
-          </li>
-          <li>
-            <span class="stat" data-bind="laggingKpi">—</span>
-            <span class="stat-label">Lagging KPIs</span>
-          </li>
-          <li>
-            <span class="stat" data-bind="envKpi">—</span>
-            <span class="stat-label">Environmental KPIs</span>
-          </li>
-        </ul>
+        <!-- Risk Assessments -->
+        <article class="card">
+          <h3>Risk Assessments</h3>
+          <p>Create and manage task and activity risk assessments with version control.</p>
+          <div class="actions">
+            <a class="btn" href="#risk-app">Launch App</a>
+            <a class="btn secondary" href="#templates">Templates</a>
+          </div>
+        </article>
+
+        <!-- Audit & RM3 -->
+        <article class="card">
+          <h3>Audits &amp; RM3</h3>
+          <p>Conduct audits aligned to RM3 and ISO 9001/14001/45001 with automated scoring.</p>
+          <div class="actions">
+            <a class="btn" href="#audit">Open Auditor</a>
+            <a class="btn secondary" href="#rm3">RM3 Criteria</a>
+          </div>
+        </article>
+
+        <!-- Policies & Procedures -->
+        <article class="card">
+          <h3>Policies &amp; Procedures</h3>
+          <p>Access the latest SHEQ policies, procedures and forms in one place.</p>
+          <div class="actions">
+            <a class="btn" href="#policies">View Library</a>
+            <a class="btn secondary" href="#forms">Forms</a>
+          </div>
+        </article>
+
+        <!-- Training & Competence -->
+        <article class="card">
+          <h3>Training &amp; Competence</h3>
+          <p>Training Academy modules, depot/track safety and contractor onboarding.</p>
+          <div class="actions">
+            <a class="btn" href="#training">Training Hub</a>
+            <a class="btn secondary" href="#induction">Contractor Induction</a>
+          </div>
+        </article>
+
+        <!-- Environmental -->
+        <article class="card">
+          <h3>Environmental</h3>
+          <p>Waste, water, energy and carbon reporting, including exemptions and factors.</p>
+          <div class="actions">
+            <a class="btn" href="#environment">Open Dashboard</a>
+            <a class="btn secondary" href="#factors">Factors &amp; Guidance</a>
+          </div>
+        </article>
+
       </div>
     </section>
 
-    <!-- Portals grid -->
-    <section class="portals" aria-labelledby="portals-heading">
-      <div class="container">
-        <h2 id="portals-heading">Jump into a workspace</h2>
-        <div class="grid">
-          <!-- Incidents & Reporting -->
-          <a class="card" id="incidents" href="incidents/heatmap/index.html" aria-label="Incidents Heat Map">
-            <div class="card-icon" aria-hidden="true">📍</div>
-            <div class="card-body">
-              <h3>Incidents Heat Map</h3>
-              <p>Explore spatial patterns with RIDDOR weighting and filters.</p>
-            </div>
-          </a>
+    <!-- Announcements section REMOVED per your instruction -->
+    <!-- (If needed later, we can re-introduce as a slim “Alerts” strip.) -->
 
-          <a class="card" href="forms/report-incident.html" aria-label="Report an Incident">
-            <div class="card-icon" aria-hidden="true">📝</div>
-            <div class="card-body">
-              <h3>Report an Incident</h3>
-              <p>Quick form for near misses, unsafe acts, and accidents.</p>
-            </div>
-          </a>
-
-          <!-- KPIs -->
-          <a class="card" id="kpis" href="powerbi/leading-kpis.html" aria-label="Leading KPIs">
-            <div class="card-icon" aria-hidden="true">📈</div>
-            <div class="card-body">
-              <h3>Leading KPIs</h3>
-              <p>Inspections, training completion, closeout time, and more.</p>
-            </div>
-          </a>
-
-          <a class="card" href="powerbi/lagging-kpis.html" aria-label="Lagging KPIs">
-            <div class="card-icon" aria-hidden="true">📉</div>
-            <div class="card-body">
-              <h3>Lagging KPIs</h3>
-              <p>TRIR, LTIs, first aid cases, and trend analysis.</p>
-            </div>
-          </a>
-
-          <a class="card" id="environment" href="powerbi/environment-kpis.html" aria-label="Environmental KPIs">
-            <div class="card-icon" aria-hidden="true">🌿</div>
-            <div class="card-body">
-              <h3>Environmental KPIs</h3>
-              <p>Energy, water, waste, recycling, and carbon performance.</p>
-            </div>
-          </a>
-
-          <!-- Audit & Assurance -->
-          <a class="card" id="audits" href="audits/index.html" aria-label="Audit Suite">
-            <div class="card-icon" aria-hidden="true">✅</div>
-            <div class="card-body">
-              <h3>Audit Suite</h3>
-              <p>RM3, ISO 9001/14001/45001 with evidence and scoring.</p>
-            </div>
-          </a>
-
-          <a class="card" href="inspections/index.html" aria-label="Inspections & Checklists">
-            <div class="card-icon" aria-hidden="true">🔍</div>
-            <div class="card-body">
-              <h3>Inspections</h3>
-              <p>Site checks, spill containment, housekeeping, and actions.</p>
-            </div>
-          </a>
-
-          <a class="card" href="risk-register/index.html" aria-label="Risk Register">
-            <div class="card-icon" aria-hidden="true">📚</div>
-            <div class="card-body">
-              <h3>Risk Register</h3>
-              <p>Operational and SHEQ risks with controls and owners.</p>
-            </div>
-          </a>
-
-          <!-- Training & Permits -->
-          <a class="card" href="training/academy.html" aria-label="Training Academy">
-            <div class="card-icon" aria-hidden="true">🎓</div>
-            <div class="card-body">
-              <h3>Training Academy</h3>
-              <p>Depot & track training, toolbox talks, and CPD certificates.</p>
-            </div>
-          </a>
-
-          <a class="card" href="permits/index.html" aria-label="Permits & Lookout">
-            <div class="card-icon" aria-hidden="true">🎫</div>
-            <div class="card-body">
-              <h3>Permits & Lookout</h3>
-              <p>Permits to work, traffic notices, and service hour planning.</p>
-            </div>
-          </a>
-
-          <!-- Docs & Alerts -->
-          <a class="card" id="resources" href="docs/index.html" aria-label="Document Library">
-            <div class="card-icon" aria-hidden="true">📂</div>
-            <div class="card-body">
-              <h3>Document Library</h3>
-              <p>Policies, procedures, templates, and forms (IMS).</p>
-            </div>
-          </a>
-
-          <a class="card" href="alerts/index.html" aria-label="Safety Alerts">
-            <div class="card-icon" aria-hidden="true">⚠️</div>
-            <div class="card-body">
-              <h3>Safety Alerts</h3>
-              <p>Internal/external alerts and learning from events.</p>
-            </div>
-          </a>
-
-          <!-- Operations & Wellbeing -->
-          <a class="card" href="lone-worker/index.html" aria-label="Lone Worker Monitoring">
-            <div class="card-icon" aria-hidden="true">🛰️</div>
-            <div class="card-body">
-              <h3>Lone Worker</h3>
-              <p>Automated check-ins and escalation via Microsoft 365.</p>
-            </div>
-          </a>
-
-          <a class="card" href="wellbeing/index.html" aria-label="Health & Wellbeing">
-            <div class="card-icon" aria-hidden="true">💙</div>
-            <div class="card-body">
-              <h3>Health & Wellbeing</h3>
-              <p>Occupational health, fatigue risk calculator, and support.</p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Announcements -->
-    <section class="announcements" aria-labelledby="news-heading">
-      <div class="container">
-        <h2 id="news-heading">Announcements</h2>
-        <div class="news-grid">
-          <article class="news-card">
-            <h3>Upcoming Night Works</h3>
-            <p>Some works may need to be carried out outside service hours due to public transport priorities.</p>
-            <a class="text-link" href="works/planned-works.html">View planned works →</a>
-          </article>
-
-          <article class="news-card">
-            <h3>Contractor Audit Clause</h3>
-            <p>Contractors are subject to annual external audits by a qualified Supertram auditor when required.</p>
-            <a class="text-link" href="procurement/audit-clause.html">Read the clause →</a>
-          </article>
-
-          <article class="news-card">
-            <h3>Training Requirement</h3>
-            <p>Contractors must complete Supertram Training Academy modules before works commence.</p>
-            <a class="text-link" href="training/requirements.html">Training guidance →</a>
-          </article>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-inner">
-      <p>© <span id="year"></span> Sheffield Supertram — SHEQ. For internal use only.</p>
-      <div class="footer-actions">
-        <button class="btn btn-ghost sm" id="toggle-theme" aria-pressed="false" aria-label="Toggle theme">🌓 Theme</button>
-        <a class="btn btn-ghost sm" href="mailto:sheq@supertram.co.uk">Contact SHEQ</a>
-      </div>
-    </div>
+  <footer>
+    © Sheffield Supertram — Safety • Health • Environment • Quality
   </footer>
 
-  <!-- Main script (root path) -->
-  <script src="app.js?v=1.0" defer></script>
+  <!-- Optional: tiny script to support hash routing (placeholder) -->
+  <script>
+    // Hook up internal anchors later if you wire to real apps/paths
+  </script>
 </body>
 </html>
 ``
