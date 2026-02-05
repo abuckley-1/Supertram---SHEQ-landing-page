@@ -10,7 +10,7 @@ OUT_JSON    = "kpi_data.json"   # written into ./data
 
 TODAY = date.today()
 
-# ---- helpers ---------------------------------------------------------------
+# ---- helper ---------------------------------------------------------------
 def find_header_row(ws, expected_headers: List[str], max_search=300) -> Tuple[int, list]:
     """Find the first row that matches at least half of the expected headers."""
     for r_idx, row in enumerate(ws.iter_rows(min_row=1, max_row=max_search, values_only=True), start=1):
