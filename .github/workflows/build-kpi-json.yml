@@ -3,18 +3,18 @@ name: Build KPI JSON Automatically
 on:
   push:
     branches: [ main ]
-    # Include only the files that should trigger this job…
+    # Only run when these files change…
     paths:
       - 'NEW FORM Accident and Incident Investigations Action Tracker_ST0335-25x26sx (1).xlsx'
       - 'data/convert_to_kpi_json.py'
       - '.github/workflows/build-kpi-json.yml'
-      # …and explicitly exclude the generated JSON to prevent loops:
+      # …and explicitly DO NOT run when the generated JSON changes (prevents loops)
       - '!data/kpi_data.json'
-  # Allow manual runs from the Actions tab
+  # Allow a manual run from the Actions tab if you need it
   workflow_dispatch:
 
 permissions:
-  contents: write      # allow the workflow to commit/push the JSON
+  contents: write   # we commit the generated JSON back to the repo
 
 # If multiple pushes happen quickly, keep only the latest run
 concurrency:
@@ -23,21 +23,20 @@ concurrency:
 
 jobs:
   build:
-    # Skip if the actor is the bot (belt-and-braces loop guard)
+    # Belt-and-braces guard: don't run if the actor is the bot itself
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Python
+      - name: Set up Python 3.11 (no cache)
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
 
       - name: Install dependencies
         run: |
@@ -46,12 +45,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install openpyxl pandas
 
-      - name: Sanity check files
+      - name: Sanity check files & paths
         run: |
           set -euxo pipefail
           echo "PWD = $(pwd)"
           ls -la
-          ls -la data
+          ls -la data || true
           test -f "NEW FORM Accident and Incident Investigations Action Tracker_ST0335-25x26sx (1).xlsx"
           test -f "data/convert_to_kpi_json.py"
 
@@ -60,7 +59,9 @@ jobs:
         run: |
           set -euxo pipefail
           python3 convert_to_kpi_json.py
-          # Fail if the file is empty (ensures header detection worked)
+          echo "File size of kpi_data.json (bytes):"
+          wc -c kpi_data.json || true
+          # Ensure JSON is present and non-empty
           test -s kpi_data.json
 
       - name: Commit updated JSON
@@ -68,7 +69,7 @@ jobs:
           set -euxo pipefail
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          # Avoid “fetch first” push rejections:
+          # Avoid "fetch first" rejections if main moved on
           git pull --rebase
           git add data/kpi_data.json
           git commit -m "Automated update of KPI data" || echo "No changes"
