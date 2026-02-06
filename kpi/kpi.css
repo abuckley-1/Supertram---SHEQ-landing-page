@@ -286,3 +286,22 @@ footer{
   .st-hero{ height:120px; }
   .st-logo{ height:44px; }
 }
+#sa_closed {
+    color: #4CAF50;      /* green */
+    font-weight: bold;
+}
+
+#sa_open {
+    color: #FF9800;      /* orange */
+    font-weight: bold;
+}
+
+#sa_overdue {
+    color: #D32F2F;      /* red */
+    font-weight: bold;
+}
+
+.kpi-sub {
+    font-size: 18px;     /* optional: make all bigger */
+    font-weight: 600;    /* optional: make the text baseline boldish */
+}
