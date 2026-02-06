@@ -1,32 +1,31 @@
 /* ============================================================
    SUPERTRAM – SHEQ KPI DASHBOARD STYLES
-   Complete styling for KPI tiles (actions, incidents, audits etc.)
    ============================================================ */
 
 /* -------------------------------
    GLOBAL COLOUR VARIABLES
    ------------------------------- */
 :root {
-    --kpi-green: #4CAF50;   /* Closed */
-    --kpi-amber: #FF9800;   /* Open */
-    --kpi-red:   #D32F2F;   /* Overdue */
-    --kpi-blue:  #0b4a7a;   /* Primary KPI number */
-    --kpi-text:  #2b3640;   /* Dark text */
-    --kpi-muted: #6b7a88;   /* Subtext */
+    --kpi-green: #4CAF50;       /* Closed */
+    --kpi-amber: #FF9800;       /* Open */
+    --kpi-red:   #D32F2F;       /* Overdue */
+    --kpi-blue:  #0b4a7a;       /* Main KPI number */
+    --kpi-text:  #2b3640;       /* Dark text */
+    --kpi-muted: #6b7a88;       /* Subtext */
     --card-bg:   #ffffff;
     --card-shadow: 0 3px 8px rgba(0,0,0,0.12);
     --card-shadow-hover: 0 6px 14px rgba(0,0,0,0.18);
 }
 
 /* -------------------------------
-   KPI CARD BASE STYLE
+   KPI CARD BASE
    ------------------------------- */
 .kpi-card {
     background: var(--card-bg);
     border-radius: 12px;
-    padding: 18px 20px;
+    padding: 20px;
     box-shadow: var(--card-shadow);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: 0.15s ease;
 }
 
 .kpi-card:hover {
@@ -35,7 +34,7 @@
 }
 
 /* -------------------------------
-   KPI TITLES + NUMBERS
+   KPI TITLE
    ------------------------------- */
 .kpi-title {
     font-size: 18px;
@@ -44,67 +43,91 @@
     margin-bottom: 6px;
 }
 
+/* -------------------------------
+   KPI MAIN VALUE
+   ------------------------------- */
 .kpi-value {
     font-size: 40px;
     font-weight: 800;
     line-height: 1.1;
     color: var(--kpi-blue);
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 /* -------------------------------
-   SUBVALUES (closed · open · overdue)
+   SUBVALUES
    ------------------------------- */
 .kpi-subvalues {
-    font-size: 18px;    /* Increased from your original */
+    font-size: 18px;
     font-weight: 600;
     color: var(--kpi-muted);
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    align-items: baseline;
 }
 
-/* Class-based colour coding */
-.kpi-subvalues .kpi-closed {
+.kpi-closed {
     color: var(--kpi-green);
     font-weight: 700;
 }
 
-.kpi-subvalues .kpi-open {
+.kpi-open {
     color: var(--kpi-amber);
     font-weight: 700;
 }
 
-.kpi-subvalues .kpi-overdue {
+.kpi-overdue {
     color: var(--kpi-red);
     font-weight: 700;
 }
 
-/* Optional: separator dot styling */
 .kpi-sep {
     color: #9aa7b3;
-    margin: 0 4px;
 }
 
 /* -------------------------------
-   GRID LAYOUT FOR KPI CARDS
+   GRID LAYOUT
    ------------------------------- */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 /* -------------------------------
-   RESPONSIVE TWEAKS
+   HEADER + BODY STYLING
    ------------------------------- */
-@media (max-width: 500px) {
-    .kpi-value {
-        font-size: 32px;
-    }
-    .kpi-subvalues {
-        font-size: 16px;
-    }
+body {
+    font-family: "Inter", sans-serif;
+    background: #f5f7f8;
+    margin: 0;
+}
+
+header {
+    background: #0b4a7a;
+    color: white;
+    padding: 20px 30px;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+}
+
+header .subheader {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 20px 0 10px;
+    color: var(--kpi-text);
 }
