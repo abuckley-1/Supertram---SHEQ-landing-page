@@ -208,3 +208,326 @@ function partsYYPP(yypp){
 }
 function prevYYPP(yypp){
   const p = partsYYPP(yypp); if (!p) return "";
+  let { yy, pp } = p;
+  if (pp > 1) pp -= 1; else { yy -= 1; pp = 12; }
+  return pad2(yy) + pad2(pp);
+}
+function lastYearYYPP(yypp){
+  const p = partsYYPP(yypp); if (!p) return "";
+  const { yy, pp } = p;
+  return pad2(yy - 1) + pad2(pp);
+}
+
+function latestPeriodFromRows(rows, key){
+  let max = -Infinity;
+  rows.forEach(r => {
+    const v = parseInt(String(r[key] || ""), 10);
+    if (Number.isFinite(v) && v > max) max = v;
+  });
+  return (max === -Infinity) ? "" : String(max).padStart(4, "0");
+}
+
+/* =======================================================================
+   RENDER CORE
+   ======================================================================= */
+
+// Small helper to set text
+function setText(id, val){ const el = document.getElementById(id); if (el) el.textContent = val; }
+
+// Number animation (0 -> target)
+function animateNumber(id, toValue, { duration=800, suffix="" } = {}){
+  const el = document.getElementById(id);
+  if (!el) return;
+  const clean = s => parseInt(String(s).replace(/[^\d-]/g,"") || "0", 10);
+  const fromValue = clean(el.textContent);
+  const target    = Number(toValue) || 0;
+
+  const start = performance.now();
+  function tick(now){
+    const t = Math.min(1, (now - start) / duration);
+    const ease = 1 - Math.pow(1 - t, 3); // cubic ease-out
+    const val = Math.round(fromValue + (target - fromValue) * ease);
+    el.textContent = String(val) + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  // subtle scale flicker
+  el.classList.add("animate-number");
+  setTimeout(() => el.classList.remove("animate-number"), duration + 50);
+}
+
+// Unified number setter with animation
+function setNumberAnimated(id, value, { suffix="" } = {}){
+  animateNumber(id, value, { suffix });
+}
+
+// trend builder (arrow + delta text)
+function trendSpan(kind, delta, directionClass, label){
+  // kind: 'prev' | 'lastyr' (purely to allow different targeting if needed)
+  // directionClass: 'trend-up' | 'trend-down' | 'trend-same'
+  const arrow = directionClass === "trend-up" ? "▲"
+              : directionClass === "trend-down" ? "▼"
+              : "●";
+  return `<span class="${directionClass} trend-${kind}">${arrow} ${delta} <span style="opacity:.7">(${label})</span></span>`;
+}
+
+// compute direction + label text
+function trendDelta(current, baseline, { higherIsBetter=false, isPercent=false } = {}){
+  if (baseline == null || !Number.isFinite(baseline)) return { html: trendSpan("prev", "n/a", "trend-same", "n/a"), cls: "trend-same" };
+  if (current == null || !Number.isFinite(current))   return { html: trendSpan("prev", "n/a", "trend-same", "n/a"), cls: "trend-same" };
+
+  const diff = current - baseline;
+
+  // label formatting
+  const labelVal = isPercent ? `${diff > 0 ? "+" : ""}${diff} pp` : `${diff > 0 ? "+" : ""}${diff}`;
+
+  let good = null;
+  if (diff === 0) { return { html: trendSpan("prev", "0", "trend-same", "no change"), cls: "trend-same" }; }
+  if (higherIsBetter) good = diff > 0; else good = diff < 0;
+
+  return {
+    html: trendSpan("prev", labelVal, good ? "trend-up" : "trend-down", higherIsBetter ? (good ? "up is good" : "down is bad") : (good ? "down is good" : "up is bad")),
+    cls: (good ? "trend-up" : "trend-down")
+  };
+}
+
+// Render trend block for a KPI
+function renderTrendBlock(blockId, current, prev, lastYear, cfg){
+  const el = document.getElementById(blockId);
+  if (!el) return;
+
+  // Previous period
+  const p = trendDelta(current, prev, cfg);
+  // Last year same period
+  const ly = trendDelta(current, lastYear, cfg);
+
+  // Adjust inner labels for clarity
+  const prevHTML   = p.html.replace("(no change)","(vs P−1)").replace("(n/a)","(vs P−1)");
+  const lastYrHTML = ly.html.replace("(no change)","(vs LY)").replace("(n/a)","(vs LY)");
+
+  el.innerHTML = prevHTML.replace('trend-prev','trend-prev') + " " + lastYrHTML.replace('trend-prev','trend-lastyr');
+}
+
+/* =======================================================================
+   MAIN RENDER (NUMBERS + TRENDS + CHARTS + TABLES)
+   ======================================================================= */
+function applyFiltersAndRender(){
+  // 1) Filter sets for current view
+  const A = byFilters(RAW.safety_actions, "actions");
+  const I = byFilters(RAW.incidents,      "incidents");
+
+  // 2) Compute headline KPIs for CURRENT view
+  const am = computeActionMetrics(A);
+  const im = computeIncidentMetrics(I);
+
+  // 3) Animate KPI numbers
+  setNumberAnimated("sa_total",      am.total);
+  setNumberAnimated("sa_open",       am.open);
+  setNumberAnimated("sa_closed",     am.closed);
+  setNumberAnimated("sa_overdue",    am.overdue);
+  setNumberAnimated("sa_pct_closed", am.pctClosed, { suffix:"%" });
+  setNumberAnimated("sa_avg_days",   am.avgDays);
+  setNumberAnimated("sa_sla",        am.slaPct,    { suffix:"%" });
+
+  setNumberAnimated("inc_total",     im.total);
+  setNumberAnimated("inc_open",      im.open);
+  setNumberAnimated("inc_closed",    im.closed);
+  setNumberAnimated("inc_overdue",   im.overdue);
+  setNumberAnimated("inc_riddor",    im.riddor);
+  setNumberAnimated("inc_dayslost",  im.daysLost);
+  setNumberAnimated("inc_sla",       im.slaPct,    { suffix:"%" });
+
+  // 4) Trends (determine current period code)
+  // If a period is selected, use it. Otherwise, detect the latest from filtered data.
+  let currentPeriod = (FILTERS.period || "");
+  if (!currentPeriod) {
+    const latestA = latestPeriodFromRows(A, "Period Action Raised");
+    const latestI = latestPeriodFromRows(I, "Reporting Period");
+    currentPeriod = String(Math.max(parseInt(latestA || "0",10), parseInt(latestI || "0",10))).padStart(4,"0");
+  }
+
+  if (currentPeriod && currentPeriod !== "NaN") {
+    renderAllTrends(currentPeriod);
+  } else {
+    // If no clear period, clear trend rows
+    ["sa_total","sa_pct_closed","sa_avg_days","sa_sla",
+     "inc_total","inc_riddor","inc_dayslost","inc_sla"]
+      .forEach(k => { const el = document.getElementById(`${k}_trend`); if (el) el.innerHTML = ""; });
+  }
+
+  // 5) charts
+  renderBar("chartActionsByType", buckets(A, "Action/Recommendation Type"), "Type");
+  renderBar("chartActionsByDept", buckets(A, "Dept", "Function"), "Department");
+  renderBar("chartIncidentsByType", buckets(I, "Incident Type", "Accident/Incident Type"), "Incident Type");
+  renderBar("chartIncidentsByFunction", buckets(I, "Function"), "Function");
+
+  // 6) tables
+  renderTableActions(A);
+  renderTableIncidents(I);
+}
+
+/* =======================================================================
+   TRENDS: compare vs P-1 and LY with dept respected
+   ======================================================================= */
+
+// Filters the RAW by exact period + (optional) dept, ignoring date range
+function rowsByExactPeriod(kind, yypp, dept=""){
+  const src = (kind === "actions") ? RAW.safety_actions : RAW.incidents;
+  const key = (kind === "actions") ? "Period Action Raised" : "Reporting Period";
+  return src.filter(r => {
+    const rp = String(r[key] || "").trim();
+    if (rp !== yypp) return false;
+    if (dept) {
+      const rf = String(r["Function"] || r["Dept"] || "").trim();
+      if (rf !== dept) return false;
+    }
+    return true;
+  });
+}
+
+function renderAllTrends(currentPeriod){
+  const dept = FILTERS.dept || "";
+  const pPrev = prevYYPP(currentPeriod);
+  const pLY   = lastYearYYPP(currentPeriod);
+
+  // ACTIONS: current, previous, last year
+  const A_cur = rowsByExactPeriod("actions", currentPeriod, dept);
+  const A_pre = rowsByExactPeriod("actions", pPrev,         dept);
+  const A_ly  = rowsByExactPeriod("actions", pLY,           dept);
+
+  const am_cur = computeActionMetrics(A_cur);
+  const am_pre = computeActionMetrics(A_pre);
+  const am_ly  = computeActionMetrics(A_ly);
+
+  // INCIDENTS: current, previous, last year
+  const I_cur = rowsByExactPeriod("incidents", currentPeriod, dept);
+  const I_pre = rowsByExactPeriod("incidents", pPrev,         dept);
+  const I_ly  = rowsByExactPeriod("incidents", pLY,           dept);
+
+  const im_cur = computeIncidentMetrics(I_cur);
+  const im_pre = computeIncidentMetrics(I_pre);
+  const im_ly  = computeIncidentMetrics(I_ly);
+
+  // KPI configuration: directionality + formatting
+  // (Higher is good? false => lower is better)
+  const CFG = {
+    sa_total:      { higherIsBetter:false, isPercent:false },
+    sa_pct_closed: { higherIsBetter:true,  isPercent:true  },
+    sa_avg_days:   { higherIsBetter:false, isPercent:false },
+    sa_sla:        { higherIsBetter:true,  isPercent:true  },
+
+    inc_total:     { higherIsBetter:false, isPercent:false },
+    inc_riddor:    { higherIsBetter:false, isPercent:false },
+    inc_dayslost:  { higherIsBetter:false, isPercent:false },
+    inc_sla:       { higherIsBetter:true,  isPercent:true  }
+  };
+
+  // Render each trend block (prev + last year)
+  const map = [
+    { id: "sa_total",      cur: am_cur.total,     pre: am_pre.total,     ly: am_ly.total },
+    { id: "sa_pct_closed", cur: am_cur.pctClosed, pre: am_pre.pctClosed, ly: am_ly.pctClosed },
+    { id: "sa_avg_days",   cur: am_cur.avgDays,   pre: am_pre.avgDays,   ly: am_ly.avgDays },
+    { id: "sa_sla",        cur: am_cur.slaPct,    pre: am_pre.slaPct,    ly: am_ly.slaPct },
+
+    { id: "inc_total",     cur: im_cur.total,     pre: im_pre.total,     ly: im_ly.total },
+    { id: "inc_riddor",    cur: im_cur.riddor,    pre: im_pre.riddor,    ly: im_ly.riddor },
+    { id: "inc_dayslost",  cur: im_cur.daysLost,  pre: im_pre.daysLost,  ly: im_ly.daysLost },
+    { id: "inc_sla",       cur: im_cur.slaPct,    pre: im_pre.slaPct,    ly: im_ly.slaPct }
+  ];
+
+  map.forEach(k => {
+    const cfg = CFG[k.id];
+    const elId = `${k.id}_trend`;
+    // Previous
+    const prevBits = trendDelta(k.cur, k.pre, cfg);
+    // Last year same period
+    const lyBits   = trendDelta(k.cur, k.ly,  cfg);
+
+    const prevHTML = prevBits.html.replace("(no change)","(vs P−1)").replace("(n/a)","(vs P−1)");
+    const lyHTML   = lyBits.html.replace("(no change)","(vs LY)").replace("(n/a)","(vs LY)");
+
+    const el = document.getElementById(elId);
+    if (el) el.innerHTML = prevHTML.replace('trend-prev','trend-prev') + " " + lyHTML.replace('trend-prev','trend-lastyr');
+  });
+}
+
+/* =======================================================================
+   CHARTS
+   ======================================================================= */
+function destroyChart(id){
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+function renderBar(canvasId, entries, label){
+  destroyChart(canvasId);
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  const labels = entries.slice(0, 12).map(e => e[0]);
+  const data   = entries.slice(0, 12).map(e => e[1]);
+  charts[canvasId] = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{ label, data, backgroundColor: "#003d73" }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true, ticks: { precision:0 } } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+/* =======================================================================
+   TABLES
+   ======================================================================= */
+function renderTableActions(rows){
+  const body = document.querySelector("#tblActions tbody");
+  if (!body) return;
+  body.innerHTML = "";
+  const openOrOverdue = rows.filter(r => {
+    const st = String(r["Status"] || "").toLowerCase();
+    return st === "open" || st === "overdue" || r["Is Overdue (calc)"] === true;
+  }).slice(0, 50);
+  openOrOverdue.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r["Status"] ?? ""}</td>
+      <td>${r["Action/Recommendation Type"] ?? ""}</td>
+      <td>${r["Dept"] ?? ""}</td>
+      <td>${r["Action Owner"] ?? ""}</td>
+      <td>${r["Date Action Raised"] ?? ""}</td>
+      <td>${r["Action Completion Target Date"] ?? ""}</td>
+      <td>${r["Action Completed"] ?? ""}</td>
+      <td>${r["Comments"] ?? ""}</td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function renderTableIncidents(rows){
+  const body = document.querySelector("#tblIncidents tbody");
+  if (!body) return;
+  body.innerHTML = "";
+  const needs = rows.filter(r => {
+    const st = String(r["Status"] || "").toLowerCase();
+    if (st === "open") return true;
+    const due  = r["Investigation Due"] ? new Date(r["Investigation Due"]) : null;
+    const comp = r["Investigation Completion date"] ? new Date(r["Investigation Completion date"]) : null;
+    return (due && due < new Date() && (!comp || comp > due));
+  }).slice(0, 50);
+  needs.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r["Status"] ?? ""}</td>
+      <td>${r["Incident Type"] ?? r["Accident/Incident Type"] ?? ""}</td>
+      <td>${r["Function"] ?? ""}</td>
+      <td>${r["Date"] ?? ""}</td>
+      <td>${r["Investigation Due"] ?? ""}</td>
+      <td>${r["Investigation Completion date"] ?? ""}</td>
+      <td>${r["RIDDOR"] ?? ""}</td>
+      <td>${Number(r["Total Number of days Lost"] ?? 0) || ""}</td>
+    `;
+    body.appendChild(tr);
+  });
+}
