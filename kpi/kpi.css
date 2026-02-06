@@ -305,3 +305,10 @@ footer{
     font-size: 18px;     /* optional: make all bigger */
     font-weight: 600;    /* optional: make the text baseline boldish */
 }
+/* Increase the line a touch (optional) */
+.kpi-sub { font-size: 18px; font-weight: 600; }
+
+/* Colour and bold for each status */
+#sa_closed  { color: #4CAF50; font-weight: 700; }   /* green */
+#sa_open    { color: #FF9800; font-weight: 700; }   /* orange */
+#sa_overdue { color: #D32F2F; font-weight: 700; }   /* red */
