@@ -1,6 +1,7 @@
 // kpi/kpi.js
 // --------------------------------------------------------------
-// Supertram — SHEQ KPI Dashboard (trends + animations + robust RIDDOR)
+// Supertram — SHEQ KPI Dashboard (with trends + animations)
+// RIDDOR now reads "RIDDOR/ SMIS" (and common alternates)
 // --------------------------------------------------------------
 
 const PATH_JSON = "../data/kpi_data.json"; // adjust if you place files elsewhere
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   buildFilterOptions();
   applyFiltersAndRender();
 
-  // Buttons
+  // buttons
   document.getElementById("applyBtn").addEventListener("click", () => {
     FILTERS.period = document.getElementById("periodSelect").value || "";
     FILTERS.start  = document.getElementById("startDate").value || "";
@@ -27,9 +28,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   document.getElementById("resetBtn").addEventListener("click", () => {
-    ["periodSelect","startDate","endDate","deptSelect"].forEach(
-      id => document.getElementById(id).value = ""
-    );
+    ["periodSelect","startDate","endDate","deptSelect"]
+      .forEach(id => document.getElementById(id).value = "");
     FILTERS = { period: "", start: "", end: "", dept: "" };
     applyFiltersAndRender();
   });
@@ -47,22 +47,21 @@ function buildFilterOptions() {
   const periods = new Set();
   const depts   = new Set();
 
-  // Safety actions
+  // Build from both arrays
   RAW.safety_actions.forEach(r => {
     if (r["Period Action Raised"]) periods.add(String(r["Period Action Raised"]).trim());
-    if (r["Dept"])      depts.add(String(r["Dept"]).trim());
-    if (r["Function"])  depts.add(String(r["Function"]).trim());
+    if (r["Dept"]) depts.add(String(r["Dept"]).trim());
+    if (r["Function"]) depts.add(String(r["Function"]).trim());
   });
-
-  // Incidents
   RAW.incidents.forEach(r => {
+    // Incidents: "Reporting Period" (confirmed)
     if (r["Reporting Period"]) periods.add(String(r["Reporting Period"]).trim());
     if (r["Function"]) depts.add(String(r["Function"]).trim());
   });
 
   const sortedPeriods = [...Array.from(periods).filter(Boolean)]
     .map(p => parseInt(p, 10))
-    .filter(Number.isFinite)
+    .filter(n => Number.isFinite(n))
     .sort((a,b) => a - b)
     .map(n => String(n).padStart(4,"0"));
 
@@ -111,7 +110,7 @@ function byFilters(records, kind) {
 }
 
 /* =======================================================================
-   METRICS + HELPERS
+   METRICS
    ======================================================================= */
 function safeLower(v){ return String(v || "").trim().toLowerCase(); }
 function isClosed(status){ return safeLower(status) === "closed"; }
@@ -119,28 +118,22 @@ function isOpen(status){   return safeLower(status) === "open"; }
 function isOverdueExplicit(status){ return safeLower(status) === "overdue"; }
 function parseDate(d){ return d ? new Date(d) : null; }
 function daysBetween(a,b){ if (!a||!b) return null; return Math.round((b-a)/(1000*60*60*24)); }
-function toNumber(x){ const n = Number(x); return Number.isFinite(n) ? n : 0; }
+function isTruthyYes(v){ return /^y(es)?/i.test(String(v||"")); } // kept for any other fields that use Y/Yes
 
-// STRICT/ROBUST RIDDOR detector.
-// Primary key: "RIDDOR/ SMIS"; but supports common export variants too.
-// Will treat "yes", "y", "true", "1" as positive in case your export changes later.
+// STRICT RIDDOR detector for your dataset ("Yes"/"No").
+// Primary key: "RIDDOR/ SMIS"; fallbacks: "RIDDOR", "RIDDOR Reportable", "RIDDOR (reportable)"
 function isRiddor(row){
-  const keys = [
+  const candidateKeys = [
     "RIDDOR/ SMIS",
     "RIDDOR",
     "RIDDOR Reportable",
     "RIDDOR (reportable)"
   ];
-  for (const k of keys){
-    if (k in row){
-      const raw = row[k];
-      if (raw === true) return true;
-      if (raw === 1) return true;
-      const v = safeLower(raw);
+  for (const k of candidateKeys){
+    if (Object.prototype.hasOwnProperty.call(row, k)) {
+      const v = String(row[k] ?? "").trim().toLowerCase();
       if (!v) continue;
-      if (v === "yes" || v === "y" || v === "true" || v === "1" || v.includes("reportable") || v.includes("riddor yes")) {
-        return true;
-      }
+      return v === "yes"; // only explicit "yes" counts
     }
   }
   return false;
@@ -148,7 +141,7 @@ function isRiddor(row){
 
 function computeActionMetrics(rows){
   let total=rows.length, open=0, closed=0, overdue=0, slaHit=0, slaDen=0;
-  const days=[];
+  let days=[];
 
   rows.forEach(r => {
     const st = r["Status"];
@@ -197,12 +190,12 @@ function computeIncidentMetrics(rows){
       if (!comp || comp > due) overdue++;
     }
 
-    // RIDDOR
+    // RIDDOR (strict yes)
     if (isRiddor(r)) riddor++;
 
     // days lost
-    const dl = toNumber(r["Total Number of days Lost"]);
-    daysLost += dl;
+    const dl = Number(r["Total Number of days Lost"]);
+    if (!isNaN(dl)) daysLost += dl;
 
     // SLA investigate
     if (due) { slaDen++; if (comp && comp <= due) slaHit++; }
@@ -258,6 +251,9 @@ function latestPeriodFromRows(rows, key){
    RENDER CORE
    ======================================================================= */
 
+// Small helper to set text
+function setText(id, val){ const el = document.getElementById(id); if (el) el.textContent = val; }
+
 // Number animation (0 -> target)
 function animateNumber(id, toValue, { duration=800, suffix="" } = {}){
   const el = document.getElementById(id);
@@ -287,6 +283,7 @@ function setNumberAnimated(id, value, { suffix="" } = {}){
 
 // trend builder (arrow + delta text)
 function trendSpan(kind, delta, directionClass, label){
+  // kind: 'prev' | 'lastyr'
   const arrow = directionClass === "trend-up" ? "▲"
               : directionClass === "trend-down" ? "▼"
               : "●";
@@ -300,10 +297,10 @@ function trendDelta(current, baseline, { higherIsBetter=false, isPercent=false }
 
   const diff = current - baseline;
 
-  // label formatting (absolute change; use "pp" when this is a percentage KPI)
+  // label formatting (absolute change)
   const labelVal = isPercent ? `${diff > 0 ? "+" : ""}${diff} pp` : `${diff > 0 ? "+" : ""}${diff}`;
 
-  let good;
+  let good = null;
   if (diff === 0) { return { html: trendSpan("prev", "0", "trend-same", "no change"), cls: "trend-same" }; }
   if (higherIsBetter) good = diff > 0; else good = diff < 0;
 
@@ -311,6 +308,23 @@ function trendDelta(current, baseline, { higherIsBetter=false, isPercent=false }
     html: trendSpan("prev", labelVal, good ? "trend-up" : "trend-down", higherIsBetter ? (good ? "up is good" : "down is bad") : (good ? "down is good" : "up is bad")),
     cls: (good ? "trend-up" : "trend-down")
   };
+}
+
+// Render trend block for a KPI
+function renderTrendBlock(blockId, current, prev, lastYear, cfg){
+  const el = document.getElementById(blockId);
+  if (!el) return;
+
+  // Previous period
+  const p = trendDelta(current, prev, cfg);
+  // Last year same period
+  const ly = trendDelta(current, lastYear, cfg);
+
+  // Adjust inner labels for clarity
+  const prevHTML   = p.html.replace("(no change)","(vs P−1)").replace("(n/a)","(vs P−1)");
+  const lastYrHTML = ly.html.replace("(no change)","(vs LY)").replace("(n/a)","(vs LY)");
+
+  el.innerHTML = prevHTML.replace('trend-prev','trend-prev') + " " + lastYrHTML.replace('trend-prev','trend-lastyr');
 }
 
 /* =======================================================================
@@ -348,9 +362,7 @@ function applyFiltersAndRender(){
   if (!currentPeriod) {
     const latestA = latestPeriodFromRows(A, "Period Action Raised");
     const latestI = latestPeriodFromRows(I, "Reporting Period");
-    currentPeriod = String(
-      Math.max(parseInt(latestA || "0",10), parseInt(latestI || "0",10))
-    ).padStart(4,"0");
+    currentPeriod = String(Math.max(parseInt(latestA || "0",10), parseInt(latestI || "0",10))).padStart(4,"0");
   }
 
   if (currentPeriod && currentPeriod !== "NaN") {
@@ -445,14 +457,16 @@ function renderAllTrends(currentPeriod){
   map.forEach(k => {
     const cfg = CFG[k.id];
     const elId = `${k.id}_trend`;
+    // Previous
     const prevBits = trendDelta(k.cur, k.pre, cfg);
+    // Last year same period
     const lyBits   = trendDelta(k.cur, k.ly,  cfg);
 
     const prevHTML = prevBits.html.replace("(no change)","(vs P−1)").replace("(n/a)","(vs P−1)");
     const lyHTML   = lyBits.html.replace("(no change)","(vs LY)").replace("(n/a)","(vs LY)");
 
     const el = document.getElementById(elId);
-    if (el) el.innerHTML = prevHTML + " " + lyHTML.replace('trend-prev','trend-lastyr');
+    if (el) el.innerHTML = prevHTML.replace('trend-prev','trend-prev') + " " + lyHTML.replace('trend-prev','trend-lastyr');
   });
 }
 
@@ -491,7 +505,7 @@ function renderTableActions(rows){
   if (!body) return;
   body.innerHTML = "";
   const openOrOverdue = rows.filter(r => {
-    const st = safeLower(r["Status"] || "");
+    const st = String(r["Status"] || "").toLowerCase();
     return st === "open" || st === "overdue" || r["Is Overdue (calc)"] === true;
   }).slice(0, 50);
   openOrOverdue.forEach(r => {
@@ -515,7 +529,7 @@ function renderTableIncidents(rows){
   if (!body) return;
   body.innerHTML = "";
   const needs = rows.filter(r => {
-    const st = safeLower(r["Status"] || "");
+    const st = String(r["Status"] || "").toLowerCase();
     if (st === "open") return true;
     const due  = r["Investigation Due"] ? new Date(r["Investigation Due"]) : null;
     const comp = r["Investigation Completion date"] ? new Date(r["Investigation Completion date"]) : null;
@@ -530,18 +544,9 @@ function renderTableIncidents(rows){
       <td>${r["Date"] ?? ""}</td>
       <td>${r["Investigation Due"] ?? ""}</td>
       <td>${r["Investigation Completion date"] ?? ""}</td>
-      <td>${isRiddor(r) ? "Yes" : "No"}</td>
-      <td>${toNumber(r["Total Number of days Lost"]) || ""}</td>
+      <td>${r["RIDDOR/ SMIS"] ?? r["RIDDOR"] ?? ""}</td>
+      <td>${Number(r["Total Number of days Lost"] ?? 0) || ""}</td>
     `;
     body.appendChild(tr);
   });
 }
-
-/* =======================================================================
-   (Optional) quick console diagnostics
-   ======================================================================= */
-// Uncomment to quickly see how many RIDDOR Yes rows exist in the currently loaded data.
-// setTimeout(() => {
-//   const yesAll = (RAW.incidents || []).filter(isRiddor).length;
-//   console.log("[Diag] Total incidents with RIDDOR=Yes in RAW:", yesAll);
-// }, 500);
