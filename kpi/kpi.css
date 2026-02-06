@@ -333,3 +333,6 @@ footer{
     color: #D32F2F;      /* red */
     font-weight: 700;
 }
+.kpi-sub {
+    white-space: nowrap;
+}
