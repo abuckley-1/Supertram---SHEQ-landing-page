@@ -312,3 +312,24 @@ footer{
 #sa_closed  { color: #4CAF50; font-weight: 700; }   /* green */
 #sa_open    { color: #FF9800; font-weight: 700; }   /* orange */
 #sa_overdue { color: #D32F2F; font-weight: 700; }   /* red */
+/* Universal styling for KPI breakdown lines */
+.kpi-sub {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Colour + bold styles for all KPI types */
+.kpi-closed {
+    color: #4CAF50;      /* green */
+    font-weight: 700;
+}
+
+.kpi-open {
+    color: #FF9800;      /* orange */
+    font-weight: 700;
+}
+
+.kpi-overdue {
+    color: #D32F2F;      /* red */
+    font-weight: 700;
+}
