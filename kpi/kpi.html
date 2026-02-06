@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- keep same viewport feel as landing page -->
   <meta name="viewport" content="width=device-width, initial-scale=1.5" />
   <title>Supertram · SHEQ KPI Dashboard</title>
   <meta name="description" content="SHEQ KPI dashboard for Safety Actions and Accident & Incident performance." />
   <link rel="icon" href="../STLogo.jpg" />
   <link rel="stylesheet" href="kpi.css" />
 
-  <!-- Chart.js (CDN). If you prefer local, download and reference locally. -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
 </head>
 <body>
@@ -19,18 +18,20 @@
     <span class="title">SHEQ KPI Dashboard</span>
   </div>
 
-  <!-- Hero header (optional background + logo) -->
+  <!-- Hero header -->
   <header class="st-hero" role="banner" aria-label="Supertram SHEQ header">
     <div class="logo-wrap">
       <img class="st-logo" src="../STLogo.jpg" alt="Supertram – SHEQ" />
     </div>
   </header>
 
-  <!-- Filters -->
   <main class="container">
+
+    <!-- Filters -->
     <section class="filters card">
       <h2>Filters</h2>
       <div class="filters-row">
+
         <div class="field">
           <label for="periodSelect">Reporting Period</label>
           <select id="periodSelect">
@@ -41,9 +42,9 @@
         <div class="field">
           <label>Custom Date Range</label>
           <div class="dates">
-            <input type="date" id="startDate" />
+            <input type="date" id="startDate">
             <span>to</span>
-            <input type="date" id="endDate" />
+            <input type="date" id="endDate">
           </div>
         </div>
 
@@ -58,57 +59,82 @@
           <button id="resetBtn" class="btn secondary">Reset</button>
           <button id="applyBtn" class="btn">Apply</button>
         </div>
+
       </div>
     </section>
 
-    <!-- KPI tiles -->
+    <!-- KPI Grid -->
     <section aria-label="Headline KPIs" class="kpis-grid">
-      <!-- Safety actions -->
+
+      <!-- ACTIONS — TOTAL -->
       <div class="kpi card">
         <div class="kpi-title">Actions — Total</div>
         <div class="kpi-num" id="sa_total">–</div>
-        <div class="kpi-sub"><span id="sa_closed">–</span> closed · <span id="sa_open">–</span> open · <span id="sa_overdue">–</span> overdue</div>
+
+        <div class="kpi-sub">
+          <span class="kpi-closed"><span id="sa_closed">–</span> closed</span> ·
+          <span class="kpi-open"><span id="sa_open">–</span> open</span> ·
+          <span class="kpi-overdue"><span id="sa_overdue">–</span> overdue</span>
+        </div>
       </div>
+
+      <!-- % Actions Closed -->
       <div class="kpi card">
         <div class="kpi-title">% Actions Closed</div>
         <div class="kpi-num" id="sa_pct_closed">–</div>
         <div class="kpi-sub">Closed vs raised in period</div>
       </div>
+
+      <!-- Avg Days to Close -->
       <div class="kpi card">
         <div class="kpi-title">Avg Days to Close</div>
         <div class="kpi-num" id="sa_avg_days">–</div>
         <div class="kpi-sub">Closed actions only</div>
       </div>
+
+      <!-- Action SLA -->
       <div class="kpi card">
         <div class="kpi-title">Action SLA (On-time)</div>
         <div class="kpi-num" id="sa_sla">–</div>
         <div class="kpi-sub">Completed ≤ Target date</div>
       </div>
 
-      <!-- Incidents -->
+      <!-- INCIDENTS — TOTAL -->
       <div class="kpi card">
         <div class="kpi-title">Incidents — Total</div>
         <div class="kpi-num" id="inc_total">–</div>
-        <div class="kpi-sub"><span id="inc_closed">–</span> closed · <span id="inc_open">–</span> open · <span id="inc_overdue">–</span> overdue inv.</div>
+
+        <div class="kpi-sub">
+          <span class="kpi-closed"><span id="inc_closed">–</span> closed</span> ·
+          <span class="kpi-open"><span id="inc_open">–</span> open</span> ·
+          <span class="kpi-overdue"><span id="inc_overdue">–</span> overdue inv.</span>
+        </div>
       </div>
+
+      <!-- RIDDOR -->
       <div class="kpi card">
         <div class="kpi-title">RIDDOR</div>
         <div class="kpi-num" id="inc_riddor">–</div>
         <div class="kpi-sub">Count in period</div>
       </div>
+
+      <!-- Days Lost -->
       <div class="kpi card">
         <div class="kpi-title">Days Lost</div>
         <div class="kpi-num" id="inc_dayslost">–</div>
         <div class="kpi-sub">Sum of reported days</div>
       </div>
+
+      <!-- Investigation SLA -->
       <div class="kpi card">
         <div class="kpi-title">Investigation SLA</div>
         <div class="kpi-num" id="inc_sla">–</div>
         <div class="kpi-sub">Completed ≤ Due date</div>
       </div>
+
     </section>
 
-    <!-- Charts row -->
+    <!-- Charts -->
     <section class="charts-grid">
       <div class="card">
         <h3>Actions by Type</h3>
@@ -128,44 +154,35 @@
       </div>
     </section>
 
-    <!-- Drilldown tables -->
+    <!-- Tables -->
     <section class="tables-grid">
+
       <div class="card">
         <h3>Open / Overdue Actions</h3>
         <table class="table" id="tblActions">
           <thead>
             <tr>
-              <th>Status</th>
-              <th>Type</th>
-              <th>Dept</th>
-              <th>Owner</th>
-              <th>Raised</th>
-              <th>Target</th>
-              <th>Completed</th>
-              <th>Comments</th>
+              <th>Status</th><th>Type</th><th>Dept</th><th>Owner</th>
+              <th>Raised</th><th>Target</th><th>Completed</th><th>Comments</th>
             </tr>
           </thead>
-          <tbody><!-- filled by JS --></tbody>
+          <tbody></tbody>
         </table>
       </div>
+
       <div class="card">
         <h3>Open / Overdue Investigations</h3>
         <table class="table" id="tblIncidents">
           <thead>
             <tr>
-              <th>Status</th>
-              <th>Incident Type</th>
-              <th>Function</th>
-              <th>Date</th>
-              <th>Due</th>
-              <th>Completed</th>
-              <th>RIDDOR</th>
-              <th>Days Lost</th>
+              <th>Status</th><th>Incident Type</th><th>Function</th><th>Date</th>
+              <th>Due</th><th>Completed</th><th>RIDDOR</th><th>Days Lost</th>
             </tr>
           </thead>
-          <tbody><!-- filled by JS --></tbody>
+          <tbody></tbody>
         </table>
       </div>
+
     </section>
 
   </main>
@@ -177,15 +194,3 @@
   <script src="kpi.js"></script>
 </body>
 </html>
-``
-<div class="kpi-sub">
-  <span id="sa_closed"><span class="val">–</span> closed</span> ·
-  <span id="sa_open"><span class="val">–</span> open</span> ·
-  <span id="sa_overdue"><span class="val">–</span> overdue</span>
-</div>
-<div class="kpi-sub">
-    <span class="kpi-closed"><span id="inc_closed">–</span> closed</span> ·
-    <span class="kpi-open"><span id="inc_open">–</span> open</span> ·
-    <span class="kpi-overdue"><span id="inc_overdue">–</span> overdue inv.</span>
-</div>
-``
