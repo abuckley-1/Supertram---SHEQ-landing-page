@@ -1,1 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supertram — SHEQ KPI Dashboard</title>
 
+    <!-- KPI Stylesheet -->
+    <link rel="stylesheet" href="../css/kpi.css">
+
+    <!-- Optional (nice clean font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background: #f5f7f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #0b4a7a;
+            color: white;
+            padding: 20px 30px;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .subheader {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: #2b3640;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    Supertram — SHEQ KPI Dashboard
+    <div class="subheader">Updated automatically via SharePoint → GitHub</div>
+</header>
+
+<main>
+
+    <!-- ============================= -->
+    <!-- SECTION: ACTIONS -->
+    <!-- ============================= -->
+    <div class="section-title">Actions</div>
+
+    <div class="kpi-grid">
+
+        <!-- Actions Total -->
+        <div class="kpi-card">
+            <div class="kpi-title">Actions — Total</div>
+            <div class="kpi-value">485</div>
+            <div class="kpi-subvalues">
+                <span class="kpi-closed">441 closed</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-open">18 open</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-overdue">26 overdue</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION: INCIDENTS -->
+    <!-- ============================= -->
+    <div class="section-title">Incidents</div>
+
+    <div class="kpi-grid">
+
+        <!-- Incident Total -->
+        <div class="kpi-card">
+            <div class="kpi-title">Incidents — Total</div>
+            <div class="kpi-value">72</div>
+            <div class="kpi-subvalues">
+                <span class="kpi-closed">65 closed</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-open">5 open</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-overdue">2 overdue</span>
+            </div>
+        </div>
+
+        <!-- RIDDOR -->
+        <div class="kpi-card">
+            <div class="kpi-title">RIDDOR Events</div>
+            <div class="kpi-value">3</div>
+            <div class="kpi-subvalues">
+                <span class="kpi-closed">2 assessed</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-open">1 under review</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION: NEAR MISSES -->
+    <!-- ============================= -->
+    <div class="section-title">Near Misses</div>
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-title">Near Misses — Total</div>
+            <div class="kpi-value">129</div>
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION: AUDITS -->
+    <!-- ============================= -->
+    <div class="section-title">Audits</div>
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-title">Audits — This Month</div>
+            <div class="kpi-value">14</div>
+            <div class="kpi-subvalues">
+                <span class="kpi-closed">9 completed</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-open">3 in progress</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-overdue">2 overdue</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================= -->
+    <!-- SECTION: ENVIRONMENT -->
+    <!-- ============================= -->
+    <div class="section-title">Environmental</div>
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-title">Environmental Events</div>
+            <div class="kpi-value">7</div>
+            <div class="kpi-subvalues">
+                <span class="kpi-closed">6 closed</span>
+                <span class="kpi-sep">·</span>
+                <span class="kpi-open">1 open</span>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>
