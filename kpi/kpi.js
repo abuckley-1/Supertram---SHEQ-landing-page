@@ -1,6 +1,7 @@
 // kpi/kpi.js
 // --------------------------------------------------------------
 // Supertram — SHEQ KPI Dashboard (with trends + animations)
+// RIDDOR now reads "RIDDOR/ SMIS" (and common alternates)
 // --------------------------------------------------------------
 
 const PATH_JSON = "../data/kpi_data.json"; // adjust if you place files elsewhere
@@ -117,7 +118,26 @@ function isOpen(status){   return safeLower(status) === "open"; }
 function isOverdueExplicit(status){ return safeLower(status) === "overdue"; }
 function parseDate(d){ return d ? new Date(d) : null; }
 function daysBetween(a,b){ if (!a||!b) return null; return Math.round((b-a)/(1000*60*60*24)); }
-function isTruthyYes(v){ return /^y(es)?/i.test(String(v||"")); }
+function isTruthyYes(v){ return /^y(es)?/i.test(String(v||"")); } // kept for any other fields that use Y/Yes
+
+// STRICT RIDDOR detector for your dataset ("Yes"/"No").
+// Primary key: "RIDDOR/ SMIS"; fallbacks: "RIDDOR", "RIDDOR Reportable", "RIDDOR (reportable)"
+function isRiddor(row){
+  const candidateKeys = [
+    "RIDDOR/ SMIS",
+    "RIDDOR",
+    "RIDDOR Reportable",
+    "RIDDOR (reportable)"
+  ];
+  for (const k of candidateKeys){
+    if (Object.prototype.hasOwnProperty.call(row, k)) {
+      const v = String(row[k] ?? "").trim().toLowerCase();
+      if (!v) continue;
+      return v === "yes"; // only explicit "yes" counts
+    }
+  }
+  return false;
+}
 
 function computeActionMetrics(rows){
   let total=rows.length, open=0, closed=0, overdue=0, slaHit=0, slaDen=0;
@@ -170,8 +190,8 @@ function computeIncidentMetrics(rows){
       if (!comp || comp > due) overdue++;
     }
 
-    // RIDDOR
-    if (isTruthyYes(r["RIDDOR"])) riddor++;
+    // RIDDOR (strict yes)
+    if (isRiddor(r)) riddor++;
 
     // days lost
     const dl = Number(r["Total Number of days Lost"]);
@@ -263,8 +283,7 @@ function setNumberAnimated(id, value, { suffix="" } = {}){
 
 // trend builder (arrow + delta text)
 function trendSpan(kind, delta, directionClass, label){
-  // kind: 'prev' | 'lastyr' (purely to allow different targeting if needed)
-  // directionClass: 'trend-up' | 'trend-down' | 'trend-same'
+  // kind: 'prev' | 'lastyr'
   const arrow = directionClass === "trend-up" ? "▲"
               : directionClass === "trend-down" ? "▼"
               : "●";
@@ -278,7 +297,7 @@ function trendDelta(current, baseline, { higherIsBetter=false, isPercent=false }
 
   const diff = current - baseline;
 
-  // label formatting
+  // label formatting (absolute change)
   const labelVal = isPercent ? `${diff > 0 ? "+" : ""}${diff} pp` : `${diff > 0 ? "+" : ""}${diff}`;
 
   let good = null;
@@ -525,7 +544,7 @@ function renderTableIncidents(rows){
       <td>${r["Date"] ?? ""}</td>
       <td>${r["Investigation Due"] ?? ""}</td>
       <td>${r["Investigation Completion date"] ?? ""}</td>
-      <td>${r["RIDDOR"] ?? ""}</td>
+      <td>${r["RIDDOR/ SMIS"] ?? r["RIDDOR"] ?? ""}</td>
       <td>${Number(r["Total Number of days Lost"] ?? 0) || ""}</td>
     `;
     body.appendChild(tr);
